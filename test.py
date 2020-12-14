@@ -1,4 +1,4 @@
-# In the training code we have given comments for various lines to facilitate the understanding. Please read the 'train.py' first.
+# In the training code we have given comments for various lines to facilitate the understanding. Please read 'train.py' first.
 opt = {'switch':20000}
 opt.update({'lr':1e-4})
 
@@ -129,13 +129,10 @@ class get_data(Dataset):
             else:
                 v_flag = False
 
-        #     print(H)
 
-            i = 0#random.randint(0, (H-self.opt['patch']-2)//2)*2
-            j = 0#random.randint(0,(W-self.opt['patch']-2)//2)*2
 
-            img_low = img_loww#[i:i+self.opt['patch'],j:j+self.opt['patch']]
-            img_gt = img_gtt#[i:i+self.opt['patch'],j:j+self.opt['patch'],:]
+            img_low = img_loww
+            img_gt = img_gtt
             
             
             
@@ -150,14 +147,11 @@ class get_data(Dataset):
             values, edges  = np.histogram(img_low, bins=self.a, range=(0,1), normed=None, weights=None, density=None)
             values = values/(img_low.shape[0]*img_low.shape[1])
 
-#            img_low_r = img_low[0:H:2,0:W:2]
-#            img_low_g1 = img_low[0:H:2,1:W:2]
-#            img_low_g2 = img_low[1:H:2,0:W:2]
-#            img_low_b = img_low[1:H:2,1:W:2]
+
             
             for_amplifier.append(torch.from_numpy(values).float())
             
-# We used the following code to do Pack operation in the training code. We used FOR loop for understanding sake. In the test code however we do it the vectorised way later in the code.
+# We used the following code to do Pack operation in the training code. We used FOR loop for understanding sake. In the test code however we do it the vectorised way later in the code to accomplish the packing operation quickly.
 #            img_gt_avg = np.zeros((H//8,W//8,int(64*3))).astype(np.float32)
 
 #            r_avg = np.zeros((H//16,W//16,64)).astype(np.float32)
@@ -196,24 +190,7 @@ class get_data(Dataset):
 obj_train = get_data(opt)
 dataloader_train = DataLoader(obj_train, batch_size=opt['batch_size'], shuffle=opt['Shuffle'], num_workers=opt['workers'], pin_memory=opt['Pin_memory'])
 
-#for i,img in enumerate(dataloader_train):
-#    gt = img[0]
-#    r_low = img[1]
-#    g1_low = img[2]
-#    g2_low = img[3]
-#    b_low = img[4]
-#    for_amplifier = img[5]
-#    m = nn.PixelShuffle(8)
 
-#    imageio.imwrite('GT.jpg',resize(gt[0].reshape(-1,8,3,512//8,512//8).permute(2,3,0,4,1).reshape(1,3,512,512)[0].cpu().numpy().transpose(1,2,0)*255,(512,512)).astype(np.uint8))
-#    imageio.imwrite('ip.jpg',resize(m(g1_low[0])[0].cpu().numpy().transpose(1,2,0)*20*255,(512,512)).astype(np.uint8))
-#    
-#    
-#    break
-#    
-#print(r_low[0].size())
-#print(gt[0].size())
-#print(for_amplifier[0].size())
 
 
 
@@ -376,7 +353,7 @@ class Net(nn.Module):
         alll = self.after_rdb(torch.cat((rdb1,rdb2,rdb3),dim=1))+identity
         
         alll = self.final(alll)
-        alll = self.relu(alll.reshape(-1,8,3,356,532).permute(2,3,0,4,1).reshape(1,3,2848,4256)) # THIS IS THE ONE LINE UNPACK operation.
+        alll = self.relu(alll.reshape(-1,8,3,356,532).permute(2,3,0,4,1).reshape(1,3,2848,4256)) # THIS IS THE ONE LINE UNPACK operation !!
         
         
         return alll,gamma
@@ -415,9 +392,7 @@ class common_functions():
 #         self.num = (num//3)*3 
         
         low=low.to(self.device)
-#        g1_low=g1_low.to(self.device)
-#        g2_low=g2_low.to(self.device)
-#        b_low=b_low.to(self.device)
+
         gt=gt.to(self.device)
         for_amplifier=for_amplifier.to(self.device)
         
@@ -427,8 +402,7 @@ class common_functions():
             beg = time.time()
             pred,gamma = self.model(low,for_amplifier)
             end = time.time()
-            #print('rlow {}'.format(r_low.size()))
-            #print('pred {}'.format(pred.size()))
+
         
         
         
@@ -472,32 +446,24 @@ class common_functions():
             print('Mean SSIM: {}'.format(self.ssim/self.count))
 
 
-#            imageio.imwrite('/media/mohit/data/mohit/chen_dark_cvpr_18_dataset/Sony/results/sir_amplifier/{}_IMG_PRED.jpg'.format(self.count), plot_out_pred)
- #           imageio.imwrite('/media/mohit/data/mohit/chen_dark_cvpr_18_dataset/Sony/results/sir_amplifier/{}_IMG_GT.jpg'.format(self.count), plot_out_GT)
+#            imageio.imwrite('{}_IMG_PRED.jpg'.format(self.count), plot_out_pred)
+ #           imageio.imwrite('{}_IMG_GT.jpg'.format(self.count), plot_out_GT)
                         
             
             
             print(gamma)
-            
-        
     
     
-    
-    
-    
-gan_model = common_functions(opt)
+final_model = common_functions(opt)
 
 
 for iteration, img in enumerate(dataloader_train):
     gt = img[0]
     low = img[1]
-#    g1_low = img[2]
-#    g2_low = img[3]
-#    b_low = img[4]
     for_amplifier = img[2]
         
     for faster in range(1):
-        gan_model.optimize_parameters(low[faster],gt[faster],for_amplifier[faster])
+        final_model.optimize_parameters(low[faster],gt[faster],for_amplifier[faster])
                       
                 
     
