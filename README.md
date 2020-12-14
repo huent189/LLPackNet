@@ -23,11 +23,11 @@ State-of-the-art algorithms on dark image enhancement need to pre-amplify the im
 </details>
 
 # How to use the code?
-The ```train.py``` and ```test.py``` files were used for training and testing. Relevant comments have been added to these files for better understanding. You however need to download the [SID dataset](https://github.com/cchen156/Learning-to-See-in-the-Dark) in your PC to execute them. 
+The [train.py](https://github.com/MohitLamba94/LLPackNet/blob/master/train.py) and [test.py](https://github.com/MohitLamba94/LLPackNet/blob/master/test.py) files were used for training and testing. Follow the comments mentioned in these files to execute them successfully. You however need to download the [SID dataset](https://github.com/cchen156/Learning-to-See-in-the-Dark) to execute them. 
 
-The Jupyter Notebooks containing test code for the ablation studies can be also found in the ```ablations``` folder.
+The Jupyter Notebooks containing test code for the ablation studies can be also found in the [ablations directory](https://github.com/MohitLamba94/LLPackNet/tree/master/ablations).
 
-We used PyTorch version 1.3.1 with Python 3.7 to conduct the experiment. Along with the commonly used Python libraries such Numpy and Skimage, do install the [Rawpy](https://pypi.org/project/rawpy/) library required to read RAW images.
+We used `PyTorch version 1.3.1` with `Python 3.7` to conduct the experiment. Along with the commonly used Python libraries such Numpy and Skimage, do install the [Rawpy](https://pypi.org/project/rawpy/) library required to read RAW images.
 
 
 
@@ -42,7 +42,6 @@ If you find any information provided here useful please cite us,
   booktitle={British Machine Vision Conference (BMVC)},
   year={2020},
   organization={BMVC}
-}
 }
 </pre>
 </div>
