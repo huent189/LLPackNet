@@ -8,7 +8,7 @@ In this work we propose a deep neural network, called `LLPackNet`, that can rest
 
 <p align="center">
   <a href="https://raw.githubusercontent.com/MohitLamba94/LLPackNet/master/pics/compariosn_overall.png">
-  <img src="https://raw.githubusercontent.com/MohitLamba94/LLPackNet/master/pics/compariosn_overall.png" alt="Click to expand full res image" height="332">
+  <img src="https://raw.githubusercontent.com/MohitLamba94/LLPackNet/master/pics/compariosn_overall.png" alt="Click to expand full res image" height="280">
   </a>
 </p> 
 
@@ -26,7 +26,11 @@ State-of-the-art algorithms on dark image enhancement need to pre-amplify the im
 
 *Watch the below video for results and overview of LLPackNet.*
 
-[![Watch the project video](https://raw.githubusercontent.com/MohitLamba94/LLPackNet/master/pics/video.png)](https://www.youtube.com/watch?v=nO6pizVH_qM&feature=youtu.be)
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=nO6pizVH_qM&feature=youtu.be">
+  <img src="https://raw.githubusercontent.com/MohitLamba94/LLPackNet/master/pics/video.png" alt="Watch the project video" height="350">
+  </a>
+</p> 
 
 <details>
   <summary>Click to see more <i>Results</i> !</summary>
