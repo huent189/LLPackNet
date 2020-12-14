@@ -8,7 +8,7 @@ In this work we propose a deep neural network, called `LLPackNet`, that can rest
 
 <p align="center">
   <a href="https://raw.githubusercontent.com/MohitLamba94/LLPackNet/master/pics/compariosn_overall.png">
-  <img src="https://raw.githubusercontent.com/MohitLamba94/LLPackNet/master/pics/compariosn_overall.png" alt="Click to expand full res image" height="432">
+  <img src="https://raw.githubusercontent.com/MohitLamba94/LLPackNet/master/pics/compariosn_overall.png" alt="Click to expand full res image" height="332">
   </a>
 </p> 
 
