@@ -6,6 +6,12 @@
 
 In this work we propose a deep neural network, called `LLPackNet`, that can restore very High Definition `2848×4256` extremely dark night-time images, in just ***3 seconds*** even on a CPU. This is achieved with `2−7× fewer` model parameters, `2−3× lower` memory utilization, `5−20×` speed up and yet maintain a competitive image reconstruction quality compared to the state-of-the-art algorithms.
 
+<p align="center">
+  <a href="https://raw.githubusercontent.com/MohitLamba94/LLPackNet/master/pics/compariosn_overall.png">
+  <img src="https://raw.githubusercontent.com/MohitLamba94/LLPackNet/master/pics/compariosn_overall.png" alt="Click to expand full res image" height="432">
+  </a>
+</p> 
+
 <details>
   <summary>Click to read full <i>Abstract</i> !</summary>
   
@@ -25,12 +31,9 @@ State-of-the-art algorithms on dark image enhancement need to pre-amplify the im
 <details>
   <summary>Click to see more <i>Results</i> !</summary>
 
-The proposed L3Fnet harnesses information form all the views to produce sharper and less noisy restorations. Compared to our restoration, the existing state-of-the-art methods exhibit considerable amount of noise and blurriness in their restorations. This is substantiated by both qualitative and PSNR/SSIM quantitative evaluations.
-
 <p align="center">
-  <img src="https://raw.githubusercontent.com/MohitLamba94/L3Fnet/main/imgs/fig4.png">
-  <img src="https://raw.githubusercontent.com/MohitLamba94/L3Fnet/main/imgs/table.png">
-  <img src="https://raw.githubusercontent.com/MohitLamba94/L3Fnet/main/imgs/depth.jpg">
+  <img src="https://raw.githubusercontent.com/MohitLamba94/LLPackNet/master/pics/comparison_fig.png">
+  <img src="https://raw.githubusercontent.com/MohitLamba94/LLPackNet/master/pics/comparison_table.png">
 </p>
 
 </details>
