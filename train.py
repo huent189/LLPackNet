@@ -1,8 +1,8 @@
 opt = {'switch':20000}
 opt.update({'lr':1e-4})
 
-opt['dir_root']='/home/mohit/Music/attention_low_light/' # directory where files and weights are stored
-opt['exp_name'] = 'AVG-sir-amplifier' # name of the experiment python file and weights
+opt['dir_root']='/path/to/directory/where/all/results/and/checkpoints/are/saved' # This directory should have a folder called weights
+opt['exp_name'] = 'this_name_will_be used_for_storing_checkpoints'
 
 opt['gpu'] = "1"
 opt['epochs'] = 1000000 # This trains the code for very long time. We stopped the execution after 400,000 iterations MANUALLY
@@ -12,11 +12,11 @@ opt['Pin_memory'] = True
 opt['workers'] = 1
 opt['patch'] = 512
 
-opt['fig_freq'] = 2000
-opt['save_freq'] = [2,200000,400000,450000]
-opt['text_prnt_freq']=2000
+opt['fig_freq'] = 2000 # intermediate restorations are saved after these many iterations 
+opt['save_freq'] = [2,200000,400000,450000] # checkpoints are saved at these iterations
+opt['text_prnt_freq']=2000 # intermediate results are printed after these many iterations
 
-opt['fig_size'] = 5
+opt['fig_size'] = 5 
 
 
 
@@ -67,7 +67,7 @@ print(img)
 
 values, edges  = np.histogram(img, bins=a, range=(0,1), normed=None, weights=None, density=None)
 values = values/(img.shape[0]*img.shape[1])
-print(values) # just to test the histogram and no relevance witht the code
+print(values) # just to test the histogram and of no relevance to the code
 
 
 
@@ -357,9 +357,6 @@ class common_functions():
         self.device = torch.device("cuda")
         
         model = Net().apply(self.weights_init_kaiming)
-#         checkpoint = torch.load(self.opt['dir_root']+'weights/'+self.opt['exp_name']+'_{}'.format(200000))
-        #print(checkpoint)
-        #model.load_state_dict(checkpoint['model'])
         print('Trainable parameters : {}'.format(sum(p.numel() for p in model.parameters() if p.requires_grad)))
         
         self.model = model.to(self.device)
@@ -374,13 +371,9 @@ class common_functions():
 
         # define optiizer
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.opt['lr'])
-        #self.optimizer.load_state_dict(checkpoint['optimizer'])
-        #self.optimizer_wraper = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer = self.optimizer, mode='max', factor=self.opt['gamma'], patience=self.opt['plateau_step'])
-        #self.optimizer_wraper = torch.optim.lr_scheduler.StepLR(self.optimizer, self.opt['plateau_step'])
         self.optimizer.zero_grad()
         
-        ##for gaussian kernel
-        
+        ##for gaussian kernel        
         channels = 3
         gaussian_kernel = [[0.03797616, 0.044863533, 0.03797616],[0.044863533, 0.053, 0.044863533], [0.03797616, 0.044863533, 0.03797616]]
         
@@ -448,8 +441,6 @@ class common_functions():
         gt = self.gaussian_filter(gt.detach())
         pred = self.gaussian_filter(pred)
         
-#         plt.figure()
-#         plt.imshow(gt[0,0:3,...].cpu().numpy().transpose(1,2,0))
 
         return self.mseLoss(pred,gt)
     
@@ -476,9 +467,7 @@ class common_functions():
   
     
     def optimize_parameters(self,r_low,g1_low,g2_low,b_low,gt,for_amplifier):
-        
-#         num = random.randint(0, 191)
-#         self.num = (num//3)*3 
+
         
         r_low=r_low.to(self.device)
         g1_low=g1_low.to(self.device)
@@ -520,21 +509,11 @@ class common_functions():
         if self.count<self.opt['switch']:
             self.loss =  (blurLoss)  + (1e-6*regularization_loss) + (1000*self.TVLoss(plot_out_pred))  + (10*self.blur_color_loss(plot_out_GT.detach(),plot_out_pred)) + (3*self.perceptual_loss(plot_out_GT.detach(),plot_out_pred))
             if self.count%self.opt['text_prnt_freq']==0:
-#                 print('TVLoss : {0: .6f}'.format(1000*self.TVLoss(pred_output)))
-#                 print('L1loss MAIN : {0: .4f}'.format(5*blurLoss))
-#                 print('ColorLoss : {0: .4f}'.format(10*self.blur_color_loss(imgs_op,pred_output)))
-#                 print('reg_loss : {0: .4f}'.format(1e-6*regularization_loss))
-#                 print('PerceptualLoss : {0: .4f}'.format(3*self.perceptual_loss(imgs_op,pred_output)))
                 print('Count : {}\n'.format(self.count))
                 print(gamma)
         else:
             self.loss =  (blurLoss)  + (1e-6*regularization_loss) + (400*self.TVLoss(plot_out_pred))  + (1*self.blur_color_loss(plot_out_GT.detach(),plot_out_pred)) + (3*self.perceptual_loss(plot_out_GT.detach(),plot_out_pred))
             if self.count%self.opt['text_prnt_freq']==0:
-#                 print('TVLoss : {0: .6f}'.format(400*self.TVLoss(pred_output)))
-#                 print('L1loss MAIN : {0: .4f}'.format(3*blurLoss))
-#                 print('ColorLoss : {0: .4f}'.format(1*self.blur_color_loss(imgs_op,pred_output)))
-#                 print('reg_loss : {0: .4f}'.format(1e-6*regularization_loss))
-#                 print('PerceptualLoss : {0: .4f}'.format(3*self.perceptual_loss(imgs_op,pred_output)))
                 print('Count : {}\n'.format(self.count))
                 print(gamma)
             
@@ -551,35 +530,13 @@ class common_functions():
             
             plot_out_pred = (np.clip(plot_out_pred[0].detach().cpu().numpy().transpose(1,2,0),0,1)*255).astype(np.uint8)
             plot_out_GT = (np.clip(plot_out_GT[0].detach().cpu().numpy().transpose(1,2,0),0,1)*255).astype(np.uint8)
-#             print(gt.shape)
-#             print(np.dtype(pred_output))
-#             counttt = 0
-#             plot_out_GT = np.zeros((self.opt['patch'],self.opt['patch'],3),dtype=np.uint8)
-#             plot_out_pred = np.zeros((self.opt['patch'],self.opt['patch'],3),dtype=np.uint8)
-            
-#             for ii in range(8):
-#                 for jj in range(8):
-
-#                     plot_out_GT[ii:opt['patch']:8,jj:self.opt['patch']:8,:] = gt[:,:,counttt:counttt+3]
-#                     plot_out_pred[ii:opt['patch']:8,jj:self.opt['patch']:8,:] = pred_output[:,:,counttt:counttt+3]
-                    
-#                     counttt=counttt+3
             
             
             print("PSNR: {0:.3f}, SSIM: {1:.3f}, RMSE:{2:.3f}".format(PSNR(plot_out_GT,plot_out_pred), SSIM(plot_out_GT,plot_out_pred,multichannel=True),NRMSE(plot_out_GT,plot_out_pred)))
             
-#             print('Input:')
-#             plt.figure(figsize=(self.opt['fig_size'], self.opt['fig_size']))
-                        
-#             plt.imshow(plot_out_ip)
-#             plt.show()
-            
-#             print('Predicted Output:')
 
             imageio.imwrite('pred_{}.jpg'.format(self.count), plot_out_pred)
             imageio.imwrite('GT_{}.jpg'.format(self.count), plot_out_GT)
-                        
-            
             
             print(gamma)
             
