@@ -28,7 +28,7 @@ State-of-the-art algorithms on dark image enhancement need to pre-amplify the im
 
 <p align="center">
   <a href="https://www.youtube.com/watch?v=nO6pizVH_qM&feature=youtu.be">
-  <img src="https://raw.githubusercontent.com/MohitLamba94/LLPackNet/master/pics/video.png" alt="Watch the project video" height="350">
+  <img src="https://raw.githubusercontent.com/MohitLamba94/LLPackNet/master/pics/video.png" alt="Watch the project video" height="400">
   </a>
 </p> 
 
