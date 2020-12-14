@@ -6,10 +6,6 @@
 
 In this work we propose a deep neural network, called `LLPackNet`, that can restore very High Definition `2848×4256` extremely dark night-time images, in just ***3 seconds*** even on a CPU. This is achieved with `2−7× fewer` model parameters, `2−3× lower` memory utilization, `5−20×` speed up and yet maintain a competitive image reconstruction quality compared to the state-of-the-art algorithms.
 
-*Watch the below video for results and overview of LLPackNet.*
-
-[![Watch the project video](https://raw.githubusercontent.com/MohitLamba94/LLPackNet/master/pics/video.png)](https://www.youtube.com/watch?v=nO6pizVH_qM&feature=youtu.be)
-
 <details>
   <summary>Click to read full <i>Abstract</i> !</summary>
   
@@ -20,6 +16,23 @@ LR spaces without incurring much artifacts in the restored image. <br>
 State-of-the-art algorithms on dark image enhancement need to pre-amplify the image before processing it. However, they generally use ground truth information to find the amplification factor even during inference, restricting their applicability for unknown scenes. In contrast, we propose a simple yet effective light-weight mechanism for automatically determining the amplification factor from the input image. We show that we can enhance a full resolution, 2848×4256, extremely dark single-image in the ballpark of 3 seconds even on a CPU. We achieve this with 2−7× fewer model parameters, 2−3× lower memory utilization,
 5−20× speed up and yet maintain a competitive image reconstruction quality compared to the state-of-the-art algorithms
  
+</details>
+
+*Watch the below video for results and overview of LLPackNet.*
+
+[![Watch the project video](https://raw.githubusercontent.com/MohitLamba94/LLPackNet/master/pics/video.png)](https://www.youtube.com/watch?v=nO6pizVH_qM&feature=youtu.be)
+
+<details>
+  <summary>Click to see more <i>Results</i> !</summary>
+
+The proposed L3Fnet harnesses information form all the views to produce sharper and less noisy restorations. Compared to our restoration, the existing state-of-the-art methods exhibit considerable amount of noise and blurriness in their restorations. This is substantiated by both qualitative and PSNR/SSIM quantitative evaluations.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/MohitLamba94/L3Fnet/main/imgs/fig4.png">
+  <img src="https://raw.githubusercontent.com/MohitLamba94/L3Fnet/main/imgs/table.png">
+  <img src="https://raw.githubusercontent.com/MohitLamba94/L3Fnet/main/imgs/depth.jpg">
+</p>
+
 </details>
 
 # How to use the code?
