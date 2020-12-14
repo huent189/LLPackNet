@@ -42,10 +42,37 @@ State-of-the-art algorithms on dark image enhancement need to pre-amplify the im
 
 </details>
 
+# Pack / UnPack operations
+
+The psuedo algorithm to perform `Pack/UnPack` operations is shown below.
+
+<p align="center">
+  <a href="https://raw.githubusercontent.com/MohitLamba94/LLPackNet/master/pics/algorithm.png">
+  <img src="https://raw.githubusercontent.com/MohitLamba94/LLPackNet/master/pics/algorithm.png" alt="Click to enlarge" height="400">
+  </a>
+</p>
+ 
+A *naive* implementation of the `UnPack` operation using the above algorithm can be done as follows,
+
+<div style="width:600px;overflow:auto;padding-left:50px;">
+<pre>
+ plot_out_GT = torch.zeros(1,3,512,512, dtype=torch.float).to(self.device)
+        plot_out_pred = torch.zeros(1,3,512,512, dtype=torch.float).to(self.device)
+        counttt=0
+        for ii in range(8):
+                for jj in range(8):
+
+                    plot_out_GT[:,:,ii:opt['patch']:8,jj:self.opt['patch']:8] = gt[:,counttt:counttt+3,:,:]
+                    plot_out_pred[:,:,ii:opt['patch']:8,jj:self.opt['patch']:8] = pred_output[:,counttt:counttt+3,:,:]
+                    
+                    counttt=counttt+3
+</pre>
+</div>
+
 # How to use the code?
 The [train.py](https://github.com/MohitLamba94/LLPackNet/blob/master/train.py) and [test.py](https://github.com/MohitLamba94/LLPackNet/blob/master/test.py) files were used for training and testing. Follow the comments mentioned in these files to execute them successfully. You however need to download the [SID dataset](https://github.com/cchen156/Learning-to-See-in-the-Dark) to execute them. 
 
-The Jupyter Notebooks containing test code for the ablation studies can be also found in the [ablations directory](https://github.com/MohitLamba94/LLPackNet/tree/master/ablations).
+The Jupyter Notebooks containing test code for the ablation studies mentioned in the paper can be also found in the [ablations directory](https://github.com/MohitLamba94/LLPackNet/tree/master/ablations).
 
 We used `PyTorch version 1.3.1` with `Python 3.7` to conduct the experiment. Along with the commonly used Python libraries such Numpy and Skimage, do install the [Rawpy](https://pypi.org/project/rawpy/) library required to read RAW images.
 
