@@ -1,7 +1,7 @@
 opt = {'switch':20000}
 opt.update({'lr':1e-4})
 
-opt['dir_root']='/path/to/directory/where/all/results/and/checkpoints/are/saved' # This directory should have a folder called weights
+opt['dir_root']='/path/to/directory/where/all/results/and/checkpoints/are/saved' # This directory should have a folder called 'weights'
 opt['exp_name'] = 'this_name_will_be used_for_storing_checkpoints'
 
 opt['gpu'] = "1"
