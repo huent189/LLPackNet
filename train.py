@@ -554,7 +554,7 @@ class common_functions():
     
     
     
-gan_model = common_functions(opt)
+final_model = common_functions(opt)
 
 for epoch in range(opt['epochs']):
     for iteration, img in enumerate(dataloader_train):
@@ -566,7 +566,7 @@ for epoch in range(opt['epochs']):
         for_amplifier = img[5]
         
         for faster in range(4):
-            gan_model.optimize_parameters(r_low[faster],g1_low[faster],g2_low[faster],b_low[faster],gt[faster],for_amplifier[faster])
+            final_model.optimize_parameters(r_low[faster],g1_low[faster],g2_low[faster],b_low[faster],gt[faster],for_amplifier[faster])
                       
                 
     
