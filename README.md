@@ -73,7 +73,7 @@ However the above code is computationally slow and in PyTorch can be quickly imp
 <div style="width:600px;overflow:auto;padding-left:50px;">
 <pre>
 
-  iLR.reshape(-1,8,3,H/8,w/8).permute(2,3,0,4,1).reshape(1,3,H,W)
+  iLR.reshape(-1,8,3,H/8,W/8).permute(2,3,0,4,1).reshape(1,3,H,W)
 
 </pre>
 </div>
