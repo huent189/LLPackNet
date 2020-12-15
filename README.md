@@ -52,7 +52,7 @@ The psuedo algorithm to perform `Pack/UnPack` operations is shown below.
   </a>
 </p>
  
-In regard to the above algorithm, a *naive* implementation of the `UnPack` operation for `&alpha; = 8, H = 2848 and W = 4256` can be achieved as follows,
+In regard to the above algorithm, a *naive* implementation of the `UnPack` operation for &alpha; = 8, H = 2848 and W = 4256 can be achieved as follows,
 
 <div style="width:600px;overflow:auto;padding-left:50px;">
 <pre>
