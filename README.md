@@ -52,20 +52,29 @@ The psuedo algorithm to perform `Pack/UnPack` operations is shown below.
   </a>
 </p>
  
-A *naive* implementation of the `UnPack` operation using the above algorithm can be done as follows,
+In regard to the above algorithm, a *naive* implementation of the `UnPack` operation for `&alpha; = 8, H = 2848 and W = 4256` can be achieved as follows,
 
 <div style="width:600px;overflow:auto;padding-left:50px;">
 <pre>
- plot_out_GT = torch.zeros(1,3,512,512, dtype=torch.float).to(self.device)
-        plot_out_pred = torch.zeros(1,3,512,512, dtype=torch.float).to(self.device)
+
+        iHR = torch.zeros(1,3,H,W, dtype=torch.float).to(self.device)
         counttt=0
         for ii in range(8):
                 for jj in range(8):
-
-                    plot_out_GT[:,:,ii:opt['patch']:8,jj:self.opt['patch']:8] = gt[:,counttt:counttt+3,:,:]
-                    plot_out_pred[:,:,ii:opt['patch']:8,jj:self.opt['patch']:8] = pred_output[:,counttt:counttt+3,:,:]
-                    
+                
+                    iHR[:,:,ii:H:8,jj:W:8] = iLR[:,counttt:counttt+3,:,:]                    
                     counttt=counttt+3
+
+</pre>
+</div>
+
+However the above code is computationally slow and in PyTorch can be quickly implemented using the following vectorised code,
+
+<div style="width:600px;overflow:auto;padding-left:50px;">
+<pre>
+
+        iLR.reshape(-1,8,3,H/8,w/8).permute(2,3,0,4,1).reshape(1,3,H,W)
+
 </pre>
 </div>
 
