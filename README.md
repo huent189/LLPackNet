@@ -85,7 +85,7 @@ The Jupyter Notebooks containing test code for the ablation studies mentioned in
 
 We used `PyTorch version 1.3.1` with `Python 3.7` to conduct the experiment. Along with the commonly used Python libraries such Numpy and Skimage, do install the [Rawpy](https://pypi.org/project/rawpy/) library required to read RAW images.
 
-
+The code for L3Fnet was written using `PyTorch 1.3.1` and `Python 3.7` running on Ubuntu 16.04 LTS.
 
 # Cite us
 If you find any information provided here useful please cite us,
