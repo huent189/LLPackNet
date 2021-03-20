@@ -92,12 +92,12 @@ If you find any information provided here useful please cite us,
 
 <div style="width:600px;overflow:auto;padding-left:50px;">
 <pre>
-  @inproceedings{lamba2020LLPackNet,
+ 
+@article{lamba2020LLPackNet,
   title={Towards Fast and Light-Weight Restoration of Dark Images},
   author={Lamba, Mohit and Balaji, Atul and Mitra, Kaushik},
-  booktitle={British Machine Vision Conference (BMVC)},
-  year={2020},
-  organization={BMVC}
+  journal={arXiv preprint arXiv:2011.14133},
+  year={2020}
 }
 </pre>
 </div>
