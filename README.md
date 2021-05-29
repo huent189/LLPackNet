@@ -4,6 +4,8 @@
 
 ***A single PDF of the paper and the supplementary is available at [arXiv.org](https://arxiv.org/abs/2011.14133).***
 
+#### A followup has been accepted in CVPR 2021. There we reduce the time-computational complexity even further while managing to obtain much better restoration. Please visit the [project page](https://mohitlamba94.github.io/Restoring-Extremely-Dark-Images-In-Real-Time/).
+
 In this work we propose a deep neural network, called `LLPackNet`, that can restore very High Definition `2848×4256` extremely dark night-time images, in just ***3 seconds*** even on a CPU. This is achieved with `2−7× fewer` model parameters, `2−3× lower` memory utilization, `5−20×` speed up and yet maintain a competitive image reconstruction quality compared to the state-of-the-art algorithms.
 
 <p align="center">
