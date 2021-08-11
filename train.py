@@ -5,15 +5,15 @@ opt['dir_root']='/content/drive/Shareddrives/huent/wacv_final/others/packnet/' #
 opt['exp_name'] = 'bmvc'
 
 opt['gpu'] = "0"
-opt['epochs'] = 400000 # This trains the code for very long time. We stopped the execution after 400,000 iterations MANUALLY
-opt['batch_size'] = 4
+opt['epochs'] = 200 # This trains the code for very long time. We stopped the execution after 400,000 iterations MANUALLY
+opt['batch_size'] = 8
 opt['Shuffle'] = True # Should we load training images in random order  
 opt['Pin_memory'] = True
 opt['workers'] = 4
 opt['patch'] = 512
 
-opt['fig_freq'] = 2000 # intermediate restorations are saved after these many iterations 
-opt['save_freq'] = range(0, 400000, 1500) # checkpoints are saved at these iterations
+opt['fig_freq'] = 10 # intermediate restorations are saved after these many iterations 
+opt['save_freq'] = range(0, 400000, 10) # checkpoints are saved at these iterations
 opt['text_prnt_freq']=2000 # intermediate results are printed after these many iterations
 
 opt['fig_size'] = 5 
@@ -128,12 +128,14 @@ class get_data(Dataset):
         for gener in range(4):
             
             if random.randint(0, 100)>50:
-                flip_flag = True
+                # flip_flag = True
+                flip_flag = False
             else:
                 flip_flag = False
 
             if random.randint(0, 100)<20:
-                v_flag = True
+                # v_flag = True
+                v_flag = False
             else:
                 v_flag = False
 
@@ -166,10 +168,10 @@ class get_data(Dataset):
 
             img_gt_avg = np.zeros((opt['patch']//8,opt['patch']//8,int(64*3))).astype(np.float32)
 
-            r_avg = np.zeros((opt['patch']//16,opt['patch']//16,64)).astype(np.float32)
-            g1_avg = np.zeros((opt['patch']//16,opt['patch']//16,64)).astype(np.float32)
-            g2_avg = np.zeros((opt['patch']//16,opt['patch']//16,64)).astype(np.float32)
-            b_avg = np.zeros((opt['patch']//16,opt['patch']//16,64)).astype(np.float32)
+            r_avg = np.zeros((opt['patch']//16,opt['patch']//16,int(64*3))).astype(np.float32)
+            g1_avg = np.zeros((opt['patch']//16,opt['patch']//16,int(64*3))).astype(np.float32)
+            g2_avg = np.zeros((opt['patch']//16,opt['patch']//16,int(64*3))).astype(np.float32)
+            b_avg = np.zeros((opt['patch']//16,opt['patch']//16,int(64*3))).astype(np.float32)
 
             count_gt=0 # We now begin the Pack 8x operation
             count_raw = 0
@@ -179,22 +181,19 @@ class get_data(Dataset):
                     img_gt_avg[:,:,count_gt:count_gt+3] = img_gt[ii:opt['patch']:8,jj:opt['patch']:8,:]
                     count_gt=count_gt+3
         #             print(count_gt)
-
-                    r_avg[:,:,count_raw + 3] = img_low_r[ii:opt['patch']//2:8,jj:opt['patch']//2:8]
-                    g1_avg[:,:,count_raw + 3] = img_low_g1[ii:opt['patch']//2:8,jj:opt['patch']//2:8]
-                    g2_avg[:,:,count_raw + 3] = img_low_g2[ii:opt['patch']//2:8,jj:opt['patch']//2:8]
-                    b_avg[:,:,count_raw + 3] = img_low_b[ii:opt['patch']//2:8,jj:opt['patch']//2:8]
+                    r_avg[:,:,count_raw:count_raw + 3] = img_low_r[ii:opt['patch']//2:8,jj:opt['patch']//2:8]
+                    g1_avg[:,:,count_raw:count_raw + 3] = img_low_g1[ii:opt['patch']//2:8,jj:opt['patch']//2:8]
+                    g2_avg[:,:,count_raw:count_raw + 3] = img_low_g2[ii:opt['patch']//2:8,jj:opt['patch']//2:8]
+                    b_avg[:,:,count_raw:count_raw + 3] = img_low_b[ii:opt['patch']//2:8,jj:opt['patch']//2:8]
                     count_raw=count_raw+3
         #             print('{},{},{}'.format(count_raw,ii,jj))
 
-            
             gt.append(torch.from_numpy((np.transpose(img_gt_avg, [2, 0, 1]))).float())
             r_low.append(torch.from_numpy((np.transpose(r_avg, [2, 0, 1]))).float())
             g1_low.append(torch.from_numpy((np.transpose(g1_avg, [2, 0, 1]))).float())
             g2_low.append(torch.from_numpy((np.transpose(g2_avg, [2, 0, 1]))).float())
             b_low.append(torch.from_numpy((np.transpose(b_avg, [2, 0, 1]))).float())
             
-        
         return gt, r_low, g1_low, g2_low, b_low, for_amplifier
     
 
@@ -209,9 +208,10 @@ for i,img in enumerate(dataloader_train):
     b_low = img[4]
     for_amplifier = img[5]
     m = nn.PixelShuffle(8)
+    cv2.imwrite('debug.png',np.uint8(gt[0].reshape(-1,8,3,512//8,512//8)[0,0].permute(1,2,0).cpu().numpy() * 255))
 
-    imageio.imwrite('GT.jpg',resize(gt[0].reshape(-1,8,3,512//8,512//8).permute(2,3,0,4,1).reshape(1,3,512,512)[0].cpu().numpy().transpose(1,2,0)*255,(512,512)).astype(np.uint8))
-    imageio.imwrite('ip.jpg',resize(m(g1_low[0])[0].cpu().numpy().transpose(1,2,0)*20*255,(512,512)).astype(np.uint8))
+    imageio.imwrite('GT.jpg',resize(gt[0].reshape(-1,8,3,512//8,512//8).permute(0,2,3,4,1).reshape(-1,3,512,512)[0].cpu().numpy().transpose(1,2,0)*255,(512,512)).astype(np.uint8))
+    imageio.imwrite('ip.jpg',resize(m(g1_low[0])[0].cpu().numpy().transpose(1,2,0) * 255,(512,512, 3)).astype(np.uint8))
     
     
     break
@@ -304,10 +304,10 @@ class Net(nn.Module):
         
         self.relu = nn.ReLU(inplace=True)
         
-        self.RDBr = nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1, bias=True)
-        self.RDBg1 = nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1, bias=True)
-        self.RDBg2 = nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1, bias=True)
-        self.RDBb = nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1, bias=True)
+        self.RDBr = nn.Conv2d(in_channels=64*3, out_channels=64, kernel_size=3, stride=1, padding=1, bias=True)
+        self.RDBg1 = nn.Conv2d(in_channels=64*3, out_channels=64, kernel_size=3, stride=1, padding=1, bias=True)
+        self.RDBg2 = nn.Conv2d(in_channels=64*3, out_channels=64, kernel_size=3, stride=1, padding=1, bias=True)
+        self.RDBb = nn.Conv2d(in_channels=64*3, out_channels=64, kernel_size=3, stride=1, padding=1, bias=True)
         
         self.before_identity = nn.Conv2d(in_channels=int(4*64), out_channels=64, kernel_size=1, stride=1, bias=False)
         self.after_rdb = nn.Conv2d(in_channels=int(3*64), out_channels=64, kernel_size=1, stride=1, bias=False)
@@ -328,8 +328,7 @@ class Net(nn.Module):
     def forward(self,r_low,g1_low,g2_low,b_low,for_amplifier):
         
 
-        gamma = self.amplifier(for_amplifier)
-        
+        gamma = self.amplifier(for_amplifier).unsqueeze(2).unsqueeze(3)
         r_low = self.relu(self.RDBr(r_low*gamma))
         g1_low = self.relu(self.RDBg1(g1_low*gamma))
         g2_low = self.relu(self.RDBg2(g2_low*gamma))
@@ -489,8 +488,8 @@ class common_functions():
         pred_output, gamma = self.model(r_low,g1_low,g2_low,b_low,for_amplifier)
         
         # THIS IS THE UNPACK operation done using for loop so that readers can understand. The vectorised version of it which is faster can be found in the TESTING code.
-        plot_out_GT = torch.zeros(1,3,512,512, dtype=torch.float).to(self.device)
-        plot_out_pred = torch.zeros(1,3,512,512, dtype=torch.float).to(self.device)
+        plot_out_GT = torch.zeros(opt['batch_size'],3,512,512, dtype=torch.float).to(self.device)
+        plot_out_pred = torch.zeros(opt['batch_size'],3,512,512, dtype=torch.float).to(self.device)
         counttt=0
         for ii in range(8):
                 for jj in range(8):
@@ -541,8 +540,8 @@ class common_functions():
             print("PSNR: {0:.3f}, SSIM: {1:.3f}, RMSE:{2:.3f}".format(PSNR(plot_out_GT,plot_out_pred), SSIM(plot_out_GT,plot_out_pred,multichannel=True),NRMSE(plot_out_GT,plot_out_pred)))
             
 
-            imageio.imwrite('pred_{}.jpg'.format(self.count), plot_out_pred)
-            imageio.imwrite('GT_{}.jpg'.format(self.count), plot_out_GT)
+            imageio.imwrite(self.opt['dir_root']+'imgs/pred_{}.jpg'.format(self.count), plot_out_pred)
+            imageio.imwrite(self.opt['dir_root'] + 'imgs/GT_{}.jpg'.format(self.count), plot_out_GT)
             
             print(gamma)
             
