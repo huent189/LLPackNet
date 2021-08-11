@@ -1,19 +1,19 @@
 opt = {'switch':20000}
 opt.update({'lr':1e-4})
 
-opt['dir_root']='/path/to/directory/where/all/results/and/checkpoints/are/saved' # This directory should have a folder called 'weights'
-opt['exp_name'] = 'this_name_will_be used_for_storing_checkpoints'
+opt['dir_root']='/content/drive/Shareddrives/huent/wacv_final/others/packnet/' # This directory should have a folder called 'weights'
+opt['exp_name'] = 'bmvc'
 
-opt['gpu'] = "1"
-opt['epochs'] = 1000000 # This trains the code for very long time. We stopped the execution after 400,000 iterations MANUALLY
-opt['batch_size'] = 1
+opt['gpu'] = "0"
+opt['epochs'] = 400000 # This trains the code for very long time. We stopped the execution after 400,000 iterations MANUALLY
+opt['batch_size'] = 4
 opt['Shuffle'] = True # Should we load training images in random order  
 opt['Pin_memory'] = True
-opt['workers'] = 1
+opt['workers'] = 4
 opt['patch'] = 512
 
 opt['fig_freq'] = 2000 # intermediate restorations are saved after these many iterations 
-opt['save_freq'] = [2,200000,400000,450000] # checkpoints are saved at these iterations
+opt['save_freq'] = range(0, 400000, 1500) # checkpoints are saved at these iterations
 opt['text_prnt_freq']=2000 # intermediate results are printed after these many iterations
 
 opt['fig_size'] = 5 
@@ -47,10 +47,9 @@ from skimage.metrics import normalized_root_mse as NRMSE
 from torch.autograd import Variable
 from math import exp
 import math
-import rawpy
 import glob
 import imageio
-
+import cv2
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   
 ##os.environ["CUDA_VISIBLE_DEVICES"]="1"
@@ -60,10 +59,10 @@ os.environ["CUDA_VISIBLE_DEVICES"]=opt['gpu']
 
 a = (np.logspace(0,8,64, endpoint=True, base=2.0)-1)/255 # setting bin edges for the histogram
 
-print(a)
+# print(a)
 
 img = np.random.random_sample((3, 2))
-print(img)
+# print(img)
 
 values, edges  = np.histogram(img, bins=a, range=(0,1), normed=None, weights=None, density=None)
 values = values/(img.shape[0]*img.shape[1])
@@ -75,12 +74,9 @@ class get_data(Dataset):
     """Loads the Data."""
     
     def __init__(self,opt):
-        self.train_files = glob.glob('/media/data/mohit/chen_dark_cvpr_18_dataset/Sony/short/0*_00_0.1s.ARW')
-        self.train_files = self.train_files + glob.glob('/media/data/mohit/chen_dark_cvpr_18_dataset/Sony/short/2*_00_0.1s.ARW') # The network takes days to train. We recommend you load the full dataset onto RAM which greatly reduces the training time. So choose wisely the number of images that can be loaded into your RAM.
+        self.train_files = glob.glob('/content/dataset/*')
 
-        self.gt_files = []
-        for x in self.train_files:
-            self.gt_files =self.gt_files+ glob.glob('/media/data/mohit/chen_dark_cvpr_18_dataset/Sony/long/*'+x[-17:-12]+'*.ARW')
+        self.gt_files = [x.replace('/content/dataset','/content/GT')for x in self.train_files]
         
         self.to_tensor = torchvision.transforms.Compose([torchvision.transforms.ToTensor()])
         
@@ -94,19 +90,29 @@ class get_data(Dataset):
     def __getitem__(self, idx):
         
        
-        raw = rawpy.imread(self.gt_files[idx])
+        # raw = rawpy.imread(self.gt_files[idx])
         
-        img_gt = raw.postprocess(use_camera_wb=True, half_size=False, no_auto_bright=True, output_bps=16).copy()
-        img_gtt=np.float32(img_gt/65535.0)
+        # img_gt = raw.postprocess(use_camera_wb=True, half_size=False, no_auto_bright=True, output_bps=16).copy()
+        # img_gtt=np.float32(img_gt/65535.0)
 
-        raw.close()
+        # raw.close()
+        img = cv2.imread(self.gt_files[idx])
+        assert img is not None, self.gt_files[idx]
+        img = cv2.resize(img, (1024, 1024))
+        img = img[:,:,::-1] / 255.0
+        img_gtt = img.astype(np.float32).copy()
+
+        # raw = rawpy.imread(self.train_files[idx])
+        # img = raw.raw_image_visible.astype(np.float32).copy()
+        # raw.close()
         
-        raw = rawpy.imread(self.train_files[idx])
-        img = raw.raw_image_visible.astype(np.float32).copy()
-        raw.close()
-        
-        img_loww = (np.maximum(img - 512,0)/ (16383 - 512))
-        H,W = img_loww.shape
+        # img_loww = (np.maximum(img - 512,0)/ (16383 - 512))
+        img = cv2.imread(self.train_files[idx])
+        assert img is not None, self.gt_files[idx]
+        img = cv2.resize(img, (1024, 1024))
+        img = img[:,:,::-1] / 255.0
+        img_loww = img.astype(np.float32).copy()
+        H,W = img_loww.shape[:-1]
         
         ##############################################################################
         
