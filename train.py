@@ -180,11 +180,11 @@ class get_data(Dataset):
                     count_gt=count_gt+3
         #             print(count_gt)
 
-                    r_avg[:,:,count_raw] = img_low_r[ii:opt['patch']//2:8,jj:opt['patch']//2:8]
-                    g1_avg[:,:,count_raw] = img_low_g1[ii:opt['patch']//2:8,jj:opt['patch']//2:8]
-                    g2_avg[:,:,count_raw] = img_low_g2[ii:opt['patch']//2:8,jj:opt['patch']//2:8]
-                    b_avg[:,:,count_raw] = img_low_b[ii:opt['patch']//2:8,jj:opt['patch']//2:8]
-                    count_raw=count_raw+1
+                    r_avg[:,:,count_raw + 3] = img_low_r[ii:opt['patch']//2:8,jj:opt['patch']//2:8]
+                    g1_avg[:,:,count_raw + 3] = img_low_g1[ii:opt['patch']//2:8,jj:opt['patch']//2:8]
+                    g2_avg[:,:,count_raw + 3] = img_low_g2[ii:opt['patch']//2:8,jj:opt['patch']//2:8]
+                    b_avg[:,:,count_raw + 3] = img_low_b[ii:opt['patch']//2:8,jj:opt['patch']//2:8]
+                    count_raw=count_raw+3
         #             print('{},{},{}'.format(count_raw,ii,jj))
 
             
